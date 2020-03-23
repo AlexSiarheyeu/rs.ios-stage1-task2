@@ -4,27 +4,51 @@
 // Complete the following function
 - (NSString*)convertFromHours:(NSString*)hours minutes:(NSString*)minutes {
     
-    NSArray *array = @[@"01",@"02", @"03", @"04",                @"05",@"06",@"07",@"08",@"09",@"10",@"11",@"12",@"13"];
-    NSString *string = [[NSString alloc] initWithString:[array componentsJoinedByString:@""]];
     
-    NSArray *array1 = @[@"30", @"31", @"32"];
-    NSString *string1 = [[NSString alloc] initWithString:[array1 componentsJoinedByString:@""]];
+    NSInteger HoursInInt = [hours integerValue];
+    NSInteger MinutesInInt = [minutes integerValue];
+    
+        NSDictionary *dictionary = @{
+        @"1" : @"one",           @"2" :  @"two",          @"3" : @"three",         @"4" : @"four",
+        @"5" : @"five",          @"6" :  @"six",          @"7" : @"seven",         @"8" : @"eight",
+        @"9" : @"nine",          @"10" : @"ten",          @"11" : @"eleven",       @"12" : @"twelve",
+        
+        @"22" : @"twenty two",   @"23" : @"twenty three", @"24" : @"twenty four",
+        };
+    
+    if (MinutesInInt > 59)  {
+        return @"";
+    } else if (HoursInInt > 12) {
+        return @"";
+    }
    
- 
-    if ([minutes containsString:string]) {
-        return (@" %@ o' clock", hours);
-    }
-    if ([minutes containsString:[array valueForKey:@"01"]]); {
+    if (MinutesInInt == 0) {
+        return [NSString stringWithFormat:@"%@ o' clock", [dictionary valueForKey:hours]];
         
-        return (@"%@ past %@", minutes, hours);
-    }
-    if ([minutes containsString:[array1 valueForKey:@"31"]]); {
-        return (@"%@ minutes to %@"), minutes, [hours intValue]+1;);
+    } else if (MinutesInInt == 15) {
+        return [NSString stringWithFormat:@"quarter past %@", [dictionary valueForKey:hours]];
         
+    } else if (MinutesInInt == 30) {
+        return [NSString stringWithFormat:@"half past %@", [dictionary valueForKey:hours]];
     }
     
+    NSString* zeroIgnore = minutes;
     
-        return @"Wrong format";
+    if ([zeroIgnore hasPrefix: @"0"]) {
+        return [NSString stringWithFormat:@"%@ minutes past %@", [dictionary valueForKey: [zeroIgnore substringFromIndex:1]],
+                                                                 [dictionary valueForKey:hours]];
+    }
     
-}
+     NSString *MinutesToNextHour = [NSString stringWithFormat:@"%ld", 60 - MinutesInInt];
+     NSString *nextHour = [NSString stringWithFormat:@"%ld", 1 + HoursInInt];
+    
+     if (MinutesInInt == 45) {
+        return [NSString stringWithFormat:@"quarter to %@",[dictionary valueForKey: nextHour]];
+         
+    } else {
+        return [NSString stringWithFormat:@"%@ minutes to %@", [dictionary valueForKey: MinutesToNextHour],
+                                                               [dictionary valueForKey:nextHour]];
+    }
+    }
 @end
+
